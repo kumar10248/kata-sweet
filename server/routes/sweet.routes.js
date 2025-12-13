@@ -3,9 +3,12 @@ const {
   createSweet,
   listSweets,
   searchSweets,
-  updateSweet
+  updateSweet,
+  deleteSweet
 } = require("../controllers/sweet.controller");
+
 const authenticate = require("../middlewares/auth.middleware");
+const authorizeRole = require("../middlewares/role.middleware");
 
 const router = express.Router();
 
@@ -13,5 +16,6 @@ router.post("/", authenticate, createSweet);
 router.get("/", authenticate, listSweets);
 router.get("/search", authenticate, searchSweets);
 router.put("/:id", authenticate, updateSweet);
+router.delete("/:id", authenticate, authorizeRole("ADMIN"), deleteSweet);
 
 module.exports = router;

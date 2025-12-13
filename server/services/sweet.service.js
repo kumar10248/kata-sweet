@@ -34,9 +34,15 @@ const updateSweet = async (id, updateData) => {
   return sweet;
 };
 
+const deleteSweet = async (id) => {
+  return Sweet.findByIdAndDelete(id);
+};
+
+
 module.exports = {
   createSweet,
   listSweets,
   searchSweets,
-  updateSweet
+  updateSweet,
+  deleteSweet
 };
