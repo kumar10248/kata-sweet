@@ -24,8 +24,19 @@ const searchSweets = async (query) => {
   return Sweet.find(filter);
 };
 
+const updateSweet = async (id, updateData) => {
+  const sweet = await Sweet.findByIdAndUpdate(
+    id,
+    updateData,
+    { new: true }
+  );
+
+  return sweet;
+};
+
 module.exports = {
   createSweet,
   listSweets,
-  searchSweets
+  searchSweets,
+  updateSweet
 };

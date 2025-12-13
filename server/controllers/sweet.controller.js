@@ -27,8 +27,27 @@ const searchSweets = async (req, res) => {
   }
 };
 
+const updateSweet = async (req, res) => {
+  try {
+    const sweet = await sweetService.updateSweet(
+      req.params.id,
+      req.body
+    );
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    return res.status(200).json(sweet);
+  } catch {
+    return res.status(500).json({ message: "Failed to update sweet" });
+  }
+};
+
+
 module.exports = {
   createSweet,
   listSweets,
-  searchSweets
+  searchSweets,
+  updateSweet
 };
