@@ -58,10 +58,23 @@ const deleteSweet = async (req, res) => {
   }
 };
 
+const purchaseSweet = async (req, res) => {
+  try {
+    const sweet = await sweetService.purchaseSweet(req.params.id);
+    return res.status(200).json(sweet);
+  } catch (err) {
+    return res
+      .status(err.statusCode || 500)
+      .json({ message: err.message });
+  }
+};
+
+
 module.exports = {
   createSweet,
   listSweets,
   searchSweets,
   updateSweet,
-  deleteSweet
+  deleteSweet,
+  purchaseSweet
 };
