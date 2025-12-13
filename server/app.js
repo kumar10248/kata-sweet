@@ -1,10 +1,11 @@
 const express = require("express");
+const authRoutes = require("./routes/auth.routes");
 
 const app = express();
+
 app.use(express.json());
 
-app.post("/api/auth/register", (req, res) => {
-  return res.status(201).json({ message: "User registered" });
-});
+// mount auth routes
+app.use("/api/auth", authRoutes);
 
 module.exports = app;
