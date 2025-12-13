@@ -2,7 +2,25 @@ const Sweet = require("../models/Sweet");
 
 const createSweet = async (data) => Sweet.create(data);
 
-const listSweets = async () => Sweet.find();
+const listSweets = async (query = {}) => {
+  const { page, limit, skip } = getPagination(query);
+
+  const [data, total] = await Promise.all([
+    Sweet.find().skip(skip).limit(limit),
+    Sweet.countDocuments()
+  ]);
+
+  return {
+    data,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit)
+    }
+  };
+};
+
 
 const searchSweets = async (query) => {
   const filter = {};
@@ -10,18 +28,31 @@ const searchSweets = async (query) => {
   if (query.name) {
     filter.name = { $regex: query.name, $options: "i" };
   }
-
   if (query.category) {
     filter.category = query.category;
   }
-
   if (query.minPrice || query.maxPrice) {
     filter.price = {};
     if (query.minPrice) filter.price.$gte = Number(query.minPrice);
     if (query.maxPrice) filter.price.$lte = Number(query.maxPrice);
   }
 
-  return Sweet.find(filter);
+  const { page, limit, skip } = getPagination(query);
+
+  const [data, total] = await Promise.all([
+    Sweet.find(filter).skip(skip).limit(limit),
+    Sweet.countDocuments(filter)
+  ]);
+
+  return {
+    data,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit)
+    }
+  };
 };
 
 const updateSweet = async (id, updateData) => {
@@ -75,6 +106,12 @@ const restockSweet = async (id) => {
   return sweet;
 };
 
+const getPagination = (query) => {
+  const page = Math.max(parseInt(query.page) || 1, 1);
+  const limit = Math.max(parseInt(query.limit) || 10, 1);
+  const skip = (page - 1) * limit;
+  return { page, limit, skip };
+};
 
 
 module.exports = {

@@ -59,18 +59,20 @@ describe("Search Sweets", () => {
       .get("/api/sweets/search?category=Indian")
       .set("Authorization", `Bearer ${token}`);
 
-    expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(1);
-    expect(res.body[0].name).toBe("Gulab Jamun");
+   expect(res.statusCode).toBe(200);
+expect(res.body.data.length).toBe(1);
+expect(res.body.data[0].name).toBe("Gulab Jamun");
+
   });
 
   it("should search sweets by price range", async () => {
     const res = await request(app)
       .get("/api/sweets/search?minPrice=50&maxPrice=150")
       .set("Authorization", `Bearer ${token}`);
+      
+expect(res.statusCode).toBe(200);
+expect(res.body.data.length).toBe(1);
+expect(res.body.data[0].name).toBe("Chocolate Cake");
 
-    expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(1);
-    expect(res.body[0].name).toBe("Chocolate Cake");
   });
 });

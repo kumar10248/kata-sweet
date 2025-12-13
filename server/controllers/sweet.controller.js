@@ -11,17 +11,18 @@ const createSweet = async (req, res) => {
 
 const listSweets = async (req, res) => {
   try {
-    const sweets = await sweetService.listSweets();
-    return res.status(200).json(sweets);
+    const result = await sweetService.listSweets(req.query);
+    return res.status(200).json(result);
   } catch {
     return res.status(500).json({ message: "Failed to fetch sweets" });
   }
 };
 
+
 const searchSweets = async (req, res) => {
   try {
-    const sweets = await sweetService.searchSweets(req.query);
-    return res.status(200).json(sweets);
+    const result = await sweetService.searchSweets(req.query);
+    return res.status(200).json(result);
   } catch {
     return res.status(500).json({ message: "Search failed" });
   }
