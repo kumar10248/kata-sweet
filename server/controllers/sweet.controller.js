@@ -18,7 +18,17 @@ const listSweets = async (req, res) => {
   }
 };
 
+const searchSweets = async (req, res) => {
+  try {
+    const sweets = await sweetService.searchSweets(req.query);
+    return res.status(200).json(sweets);
+  } catch {
+    return res.status(500).json({ message: "Search failed" });
+  }
+};
+
 module.exports = {
   createSweet,
-  listSweets
+  listSweets,
+  searchSweets
 };
