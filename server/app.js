@@ -2,11 +2,13 @@ const express = require("express");
 const authRoutes = require("./routes/auth.routes");
 const authenticate = require("./middlewares/auth.middleware");
 const authorizeRole = require("./middlewares/role.middleware");
+const sweetRoutes = require("./routes/sweet.routes");
 
 const app = express();
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.use("/api/sweets", sweetRoutes);
 
 // Protected test route
 app.get("/api/protected", authenticate, (req, res) => {
