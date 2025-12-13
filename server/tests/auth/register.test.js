@@ -1,9 +1,6 @@
 const request = require("supertest");
-const express = require("express");
+const app = require("../../app.js");
 
-
-const app = express();
-app.use(express.json());
 
 describe("POST /api/auth/register", () => {
   it("should register a user and return 201", async () => {
