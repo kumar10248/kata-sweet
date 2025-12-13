@@ -60,11 +60,29 @@ const purchaseSweet = async (id) => {
 };
 
 
+const restockSweet = async (id) => {
+  const sweet = await Sweet.findById(id);
+
+  if (!sweet) {
+    const error = new Error("Sweet not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  sweet.quantity += 1;
+  await sweet.save();
+
+  return sweet;
+};
+
+
+
 module.exports = {
   createSweet,
   listSweets,
   searchSweets,
   updateSweet,
   deleteSweet,
-  purchaseSweet
+  purchaseSweet,
+  restockSweet
 };
