@@ -2,11 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "main": "index.js",
-<<<<<<< HEAD
  
-=======
-  
->>>>>>> 99af531 (chore: remove unnecessary "type" field from package.json)
   "scripts": {
     "test": "jest --runInBand",
     "dev": "nodemon index.js"
