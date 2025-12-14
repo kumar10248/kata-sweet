@@ -50,7 +50,11 @@ app.get(
 // This avoids relying solely on NODE_ENV and fixes deployments where
 // the build exists but NODE_ENV isn't set to 'production'.
 const frontendPath = path.join(__dirname, '../frontend/dist');
+console.log('🔍 Frontend path:', frontendPath);
+console.log('🔍 Frontend exists:', fs.existsSync(frontendPath));
+
 if (fs.existsSync(frontendPath)) {
+  console.log('✅ Serving frontend from:', frontendPath);
   app.use(express.static(frontendPath));
 
   // Handle React routing - return index.html for all non-API routes
@@ -60,8 +64,11 @@ if (fs.existsSync(frontendPath)) {
     if (req.path.startsWith('/api')) {
       return next();
     }
+    console.log('📄 Serving index.html for:', req.path);
     res.sendFile(path.join(frontendPath, 'index.html'));
   });
+} else {
+  console.log('⚠️  Frontend build not found at:', frontendPath);
 }
 
 // 404 handler for API routes only (if not in production)
