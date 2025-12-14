@@ -1,11 +1,18 @@
 import axios from "axios";
 
+// Use relative URL in production (served from same domain), absolute URL in development
+const baseURL = import.meta.env.MODE === 'production' 
+  ? '/api'  // Relative URL - served from same Render instance
+  : 'http://localhost:8000/api';  // Development - local backend
+
 const api = axios.create({
-  baseURL: "https://kata-sweet.onrender.com/api", // backend base URL
+  baseURL,
   headers: {
     "Content-Type": "application/json"
   }
 });
+
+console.log('API Base URL:', baseURL);
 
 // Request interceptor to add token to all requests
 api.interceptors.request.use(

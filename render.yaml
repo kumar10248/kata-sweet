@@ -1,11 +1,11 @@
 services:
-  # Backend API Service
+  # Full Stack Service (Backend + Frontend)
   - type: web
     name: sweet-shop-api
     runtime: node
     region: oregon
     plan: free
-    buildCommand: cd server && npm install
+    buildCommand: cd server && npm install --production=false && cd ../frontend && npm install && npm run build
     startCommand: cd server && npm start
     envVars:
       - key: NODE_ENV
