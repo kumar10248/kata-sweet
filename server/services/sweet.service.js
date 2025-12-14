@@ -91,7 +91,7 @@ const purchaseSweet = async (id) => {
 };
 
 
-const restockSweet = async (id) => {
+const restockSweet = async (id, quantity = 1) => {
   const sweet = await Sweet.findById(id);
 
   if (!sweet) {
@@ -100,7 +100,7 @@ const restockSweet = async (id) => {
     throw error;
   }
 
-  sweet.quantity += 1;
+  sweet.quantity += quantity;
   await sweet.save();
 
   return sweet;
