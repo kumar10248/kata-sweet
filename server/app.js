@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const fs = require("fs");
 const authRoutes = require("./routes/auth.routes");
 const authenticate = require("./middlewares/auth.middleware");
 const authorizeRole = require("./middlewares/role.middleware");
@@ -45,13 +46,15 @@ app.get(
   }
 );
 
-// Serve static files from React app in production
-if (process.env.NODE_ENV === 'production') {
-  const frontendPath = path.join(__dirname, '../frontend/dist');
+// Serve static files from the React app if a build is present.
+// This avoids relying solely on NODE_ENV and fixes deployments where
+// the build exists but NODE_ENV isn't set to 'production'.
+const frontendPath = path.join(__dirname, '../frontend/dist');
+if (fs.existsSync(frontendPath)) {
   app.use(express.static(frontendPath));
-  
+
   // Handle React routing - return index.html for all non-API routes
-  // Express 5 requires middleware instead of app.get('*')
+  // Use middleware compatible with Express 5.
   app.use((req, res, next) => {
     // Skip API routes
     if (req.path.startsWith('/api')) {
