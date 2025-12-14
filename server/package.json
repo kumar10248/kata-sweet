@@ -6,8 +6,7 @@
     "test": "jest --runInBand",
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "build": "npm install --production=false && npm run build:frontend",
-    "build:frontend": "cd ../frontend && npm install && npm run build"
+    "build": "npm install --production=false"
   },
   "keywords": [],
   "author": "",

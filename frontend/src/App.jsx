@@ -31,8 +31,6 @@ function App() {
               </AdminRoute>
             } 
           />
-          {/* Catch-all route for 404 - redirect to login */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
