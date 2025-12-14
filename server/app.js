@@ -9,10 +9,23 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-  origin: 'http://localhost:5173'
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.ALLOWED_ORIGINS?.split(',') || '*'
+    : 'http://localhost:5173'
 }));
 
 app.use(express.json());
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ 
+    status: "OK", 
+    message: "Sweet Shop API is running",
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/sweets", sweetRoutes);
 

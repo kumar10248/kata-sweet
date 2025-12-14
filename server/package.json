@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "build": "echo 'No build step required for Node.js backend'"
   },
   "keywords": [],
   "author": "",
