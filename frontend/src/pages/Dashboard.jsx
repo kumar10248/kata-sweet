@@ -15,21 +15,27 @@ function Dashboard() {
     category: "",
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 12,
+    total: 0,
+    totalPages: 0,
+  });
   const { logout, token, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchSweets();
-  }, []);
+  }, [pagination.page, searchQuery]);
 
   const fetchSweets = async () => {
     try {
       setLoading(true);
-      let url = "/sweets";
+      let url = `/sweets?page=${pagination.page}&limit=${pagination.limit}`;
       
       // Use search endpoint if there's a search query or filters
       if (searchQuery || filters.minPrice || filters.maxPrice || filters.category) {
-        url = "/sweets/search?";
+        url = `/sweets/search?page=${pagination.page}&limit=${pagination.limit}&`;
         const params = [];
         if (searchQuery) params.push(`name=${encodeURIComponent(searchQuery)}`);
         if (filters.minPrice) params.push(`minPrice=${filters.minPrice}`);
@@ -41,13 +47,21 @@ function Dashboard() {
       const response = await api.get(url, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
       // Handle both array and paginated response
-      const sweetsData = response.data.data 
-        ? response.data.data 
-        : Array.isArray(response.data) 
-          ? response.data 
-          : [];
-      setSweets(sweetsData);
+      if (response.data.data) {
+        // Paginated response
+        setSweets(response.data.data);
+        setPagination({
+          ...pagination,
+          total: response.data.pagination.total,
+          totalPages: response.data.pagination.totalPages,
+        });
+      } else {
+        // Array response
+        const sweetsData = Array.isArray(response.data) ? response.data : [];
+        setSweets(sweetsData);
+      }
       setError("");
     } catch (err) {
       setError("Failed to load sweets");
@@ -80,7 +94,7 @@ function Dashboard() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchSweets();
+    setPagination({ ...pagination, page: 1 }); // Reset to page 1 on search
   };
 
   const handleFilterChange = (e) => {
@@ -97,12 +111,17 @@ function Dashboard() {
       maxPrice: "",
       category: "",
     });
-    // Trigger fetch with cleared filters
-    setTimeout(fetchSweets, 0);
+    setPagination({ ...pagination, page: 1 }); // Reset to page 1
   };
 
   const handleApplyFilters = () => {
-    fetchSweets();
+    setPagination({ ...pagination, page: 1 }); // Reset to page 1 on filter
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setPagination({ ...pagination, page: newPage });
+    }
   };
 
   return (
@@ -309,6 +328,56 @@ function Dashboard() {
                       ? "Try adjusting your search or filters" 
                       : "No sweets available at the moment"}
                   </p>
+                </div>
+              )}
+
+              {/* Pagination Controls */}
+              {pagination.totalPages > 1 && (
+                <div className="pagination-container">
+                  <div className="pagination-info">
+                    Showing {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} sweets
+                  </div>
+                  <div className="pagination-controls">
+                    <button 
+                      onClick={() => handlePageChange(pagination.page - 1)}
+                      disabled={pagination.page === 1}
+                      className="pagination-btn"
+                    >
+                      ← Previous
+                    </button>
+                    
+                    <div className="pagination-pages">
+                      {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                        let pageNum;
+                        if (pagination.totalPages <= 5) {
+                          pageNum = i + 1;
+                        } else if (pagination.page <= 3) {
+                          pageNum = i + 1;
+                        } else if (pagination.page >= pagination.totalPages - 2) {
+                          pageNum = pagination.totalPages - 4 + i;
+                        } else {
+                          pageNum = pagination.page - 2 + i;
+                        }
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => handlePageChange(pageNum)}
+                            className={`pagination-btn ${pagination.page === pageNum ? 'active' : ''}`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <button 
+                      onClick={() => handlePageChange(pagination.page + 1)}
+                      disabled={pagination.page === pagination.totalPages}
+                      className="pagination-btn"
+                    >
+                      Next →
+                    </button>
+                  </div>
                 </div>
               )}
             </>

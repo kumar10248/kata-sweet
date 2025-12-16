@@ -683,3 +683,497 @@
     border-top-color: #4a5568;
   }
 }
+
+/* Pagination Styles */
+.pagination-container {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.pagination-info {
+  text-align: center;
+  color: var(--color-gray-300);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagination-btn {
+  padding: 0.6rem 1.2rem;
+  background: var(--color-gray-800);
+  color: var(--color-gray-300);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  min-width: 45px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-purple) 0%, var(--color-amber) 100%);
+  color: var(--color-black);
+  border-color: var(--color-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: var(--color-gray-900);
+  border-color: var(--color-gray-700);
+}
+
+.pagination-btn.active {
+  background: linear-gradient(135deg, var(--color-purple) 0%, var(--color-amber) 100%);
+  color: var(--color-black);
+  border-color: var(--color-purple);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
+}
+
+/* Responsive Design - Dashboard */
+
+/* Large Tablets */
+@media (max-width: 1024px) {
+  .dashboard-content {
+    padding: 1.5rem;
+  }
+
+  .stats-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sweets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  /* Header */
+  .dashboard-header {
+    padding: 1.5rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .header-title {
+    font-size: 2rem;
+  }
+
+  .title-icon {
+    font-size: 2rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .user-info {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .user-role {
+    font-size: 0.8rem;
+  }
+
+  .logout-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Content */
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  /* Stats Overview */
+  .stats-overview {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+  }
+
+  /* Search Section */
+  .search-section {
+    padding: 1.5rem;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-input-group {
+    width: 100%;
+  }
+
+  .btn-toggle-filter {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Filter Panel */
+  .filter-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+
+  .filter-actions button {
+    width: 100%;
+  }
+
+  /* Sweets Grid */
+  .sweets-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .sweet-card {
+    max-width: 100%;
+  }
+
+  .sweet-emoji {
+    font-size: 2.5rem;
+  }
+
+  .sweet-name {
+    font-size: 1.15rem;
+  }
+
+  .sweet-description {
+    font-size: 0.9rem;
+  }
+
+  .detail-value {
+    font-size: 1.05rem;
+  }
+
+  .purchase-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .pagination-info {
+    font-size: 0.9rem;
+  }
+
+  .pagination-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pagination-pages {
+    order: -1;
+    width: 100%;
+  }
+
+  .pagination-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Empty State */
+  .empty-state {
+    padding: 3rem 1.5rem;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+  }
+
+  .empty-title {
+    font-size: 1.5rem;
+  }
+
+  .empty-description {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+  /* Header */
+  .dashboard-header {
+    padding: 1rem;
+  }
+
+  .header-content {
+    gap: 1rem;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+  }
+
+  .title-icon {
+    font-size: 1.5rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .user-welcome {
+    font-size: 0.85rem;
+  }
+
+  .user-name {
+    font-size: 1rem;
+  }
+
+  .user-role {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .logout-btn {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Content */
+  .dashboard-content {
+    padding: 0.75rem;
+  }
+
+  /* Stats */
+  .stats-overview {
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stat-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.75rem;
+    margin: 0 auto;
+  }
+
+  .stat-details {
+    align-items: center;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  /* Search */
+  .search-section {
+    padding: 1rem;
+  }
+
+  .search-input {
+    padding: 0.75rem 0.75rem 0.75rem 2.75rem;
+    font-size: 0.9rem;
+  }
+
+  .search-icon {
+    left: 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-search {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-toggle-filter {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  /* Filter Panel */
+  .filter-panel {
+    padding: 1rem;
+  }
+
+  .filter-group label {
+    font-size: 0.85rem;
+  }
+
+  .filter-input {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .filter-actions button {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  /* Sweet Cards */
+  .sweets-grid {
+    gap: 1rem;
+  }
+
+  .sweet-card {
+    border-radius: 14px;
+  }
+
+  .sweet-card-header {
+    padding: 1rem;
+  }
+
+  .sweet-emoji {
+    font-size: 2rem;
+  }
+
+  .stock-badge {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .sweet-card-body {
+    padding: 1rem;
+  }
+
+  .sweet-name {
+    font-size: 1rem;
+  }
+
+  .sweet-description {
+    font-size: 0.85rem;
+  }
+
+  .detail-label {
+    font-size: 0.75rem;
+  }
+
+  .detail-value {
+    font-size: 0.95rem;
+  }
+
+  .sweet-card-footer {
+    padding: 1rem;
+  }
+
+  .purchase-btn {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-icon {
+    font-size: 1rem;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .pagination-info {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .pagination-controls {
+    gap: 0.75rem;
+  }
+
+  .pagination-pages {
+    gap: 0.35rem;
+  }
+
+  .pagination-btn {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.85rem;
+    min-width: 40px;
+  }
+
+  /* Empty State */
+  .empty-state {
+    padding: 2.5rem 1rem;
+  }
+
+  .empty-icon {
+    font-size: 3.5rem;
+  }
+
+  .empty-title {
+    font-size: 1.25rem;
+  }
+
+  .empty-description {
+    font-size: 0.85rem;
+  }
+
+  /* Loading */
+  .loading-container {
+    padding: 2.5rem 1rem;
+  }
+
+  .loader {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+
+  .loading-text {
+    font-size: 0.9rem;
+  }
+}
