@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import api from "../api/axios";
@@ -9,6 +9,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     minPrice: "",
     maxPrice: "",
@@ -23,10 +24,31 @@ function Dashboard() {
   });
   const { logout, token, user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const searchTimeoutRef = useRef(null);
+
+  // Debounce search query - update debouncedSearchQuery after 1 second of no typing
+  useEffect(() => {
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout
+    searchTimeoutRef.current = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 1000);
+
+    // Cleanup on unmount or when searchQuery changes
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
 
   useEffect(() => {
     fetchSweets();
-  }, [pagination.page, searchQuery]);
+  }, [pagination.page, debouncedSearchQuery, filters.minPrice, filters.maxPrice, filters.category]);
 
   const fetchSweets = async () => {
     try {
@@ -34,10 +56,10 @@ function Dashboard() {
       let url = `/sweets?page=${pagination.page}&limit=${pagination.limit}`;
       
       // Use search endpoint if there's a search query or filters
-      if (searchQuery || filters.minPrice || filters.maxPrice || filters.category) {
+      if (debouncedSearchQuery || filters.minPrice || filters.maxPrice || filters.category) {
         url = `/sweets/search?page=${pagination.page}&limit=${pagination.limit}&`;
         const params = [];
-        if (searchQuery) params.push(`name=${encodeURIComponent(searchQuery)}`);
+        if (debouncedSearchQuery) params.push(`name=${encodeURIComponent(debouncedSearchQuery)}`);
         if (filters.minPrice) params.push(`minPrice=${filters.minPrice}`);
         if (filters.maxPrice) params.push(`maxPrice=${filters.maxPrice}`);
         if (filters.category) params.push(`category=${encodeURIComponent(filters.category)}`);
@@ -94,6 +116,8 @@ function Dashboard() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    // Immediately trigger search on form submit (Enter key)
+    setDebouncedSearchQuery(searchQuery);
     setPagination({ ...pagination, page: 1 }); // Reset to page 1 on search
   };
 
@@ -114,15 +138,18 @@ function Dashboard() {
     setPagination({ ...pagination, page: 1 }); // Reset to page 1
   };
 
-  const handleApplyFilters = () => {
-    setPagination({ ...pagination, page: 1 }); // Reset to page 1 on filter
-  };
-
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= pagination.totalPages) {
       setPagination({ ...pagination, page: newPage });
     }
   };
+
+  // Count active filters
+  const activeFiltersCount = [
+    filters.category,
+    filters.minPrice,
+    filters.maxPrice
+  ].filter(Boolean).length;
 
   return (
     <div className="dashboard">
@@ -197,6 +224,9 @@ function Dashboard() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="search-input"
                 />
+                {searchQuery && searchQuery !== debouncedSearchQuery && (
+                  <span className="search-typing-indicator">typing...</span>
+                )}
                 <button type="submit" className="btn-search">
                   Search
                 </button>
@@ -208,54 +238,56 @@ function Dashboard() {
               >
                 <span className="btn-icon">{showFilters ? '🔼' : '🔽'}</span>
                 {showFilters ? 'Hide Filters' : 'Show Filters'}
+                {activeFiltersCount > 0 && (
+                  <span className="filter-badge">{activeFiltersCount}</span>
+                )}
               </button>
             </form>
 
             {showFilters && (
               <div className="filter-panel">
-                <div className="filter-group">
-                  <label>Category</label>
-                  <input
-                    type="text"
-                    name="category"
-                    placeholder="e.g., Chocolate, Candy"
-                    value={filters.category}
-                    onChange={handleFilterChange}
-                    className="filter-input"
-                  />
-                </div>
-                <div className="filter-group">
-                  <label>Min Price (₹)</label>
-                  <input
-                    type="number"
-                    name="minPrice"
-                    placeholder="Min"
-                    value={filters.minPrice}
-                    onChange={handleFilterChange}
-                    className="filter-input"
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-                <div className="filter-group">
-                  <label>Max Price (₹)</label>
-                  <input
-                    type="number"
-                    name="maxPrice"
-                    placeholder="Max"
-                    value={filters.maxPrice}
-                    onChange={handleFilterChange}
-                    className="filter-input"
-                    min="0"
-                    step="0.01"
-                  />
+                <div className="filter-grid">
+                  <div className="filter-group">
+                    <label>Category</label>
+                    <input
+                      type="text"
+                      name="category"
+                      placeholder="e.g., Chocolate, Candy"
+                      value={filters.category}
+                      onChange={handleFilterChange}
+                      className="filter-input"
+                    />
+                  </div>
+                  <div className="filter-group">
+                    <label>Min Price ($)</label>
+                    <input
+                      type="number"
+                      name="minPrice"
+                      placeholder="Min"
+                      value={filters.minPrice}
+                      onChange={handleFilterChange}
+                      className="filter-input"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                  <div className="filter-group">
+                    <label>Max Price ($)</label>
+                    <input
+                      type="number"
+                      name="maxPrice"
+                      placeholder="Max"
+                      value={filters.maxPrice}
+                      onChange={handleFilterChange}
+                      className="filter-input"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
                 </div>
                 <div className="filter-actions">
-                  <button onClick={handleApplyFilters} className="btn-apply">
-                    Apply Filters
-                  </button>
                   <button onClick={handleClearFilters} className="btn-clear">
-                    Clear All
+                    🔄 Clear All Filters
                   </button>
                 </div>
               </div>
@@ -278,6 +310,20 @@ function Dashboard() {
             </div>
           ) : (
             <>
+              {/* Active Filters Info */}
+              {(activeFiltersCount > 0 || debouncedSearchQuery) && (
+                <div className="active-filters-info">
+                  <span className="filter-info-text">
+                    🔍 {debouncedSearchQuery && `Searching: "${debouncedSearchQuery}"`}
+                    {debouncedSearchQuery && activeFiltersCount > 0 && ' • '}
+                    {activeFiltersCount > 0 && `${activeFiltersCount} filter${activeFiltersCount > 1 ? 's' : ''} active`}
+                  </span>
+                  <button onClick={handleClearFilters} className="btn-clear-inline">
+                    ✕ Clear
+                  </button>
+                </div>
+              )}
+
               {/* Sweets Grid */}
               {sweets.length > 0 ? (
                 <div className="sweets-grid">
