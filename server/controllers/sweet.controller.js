@@ -73,7 +73,7 @@ const purchaseSweet = async (req, res) => {
 
 const restockSweet = async (req, res) => {
   try {
-    const quantity = parseInt(req.body.quantity) || 1;
+    const quantity = req.body?.quantity ? parseInt(req.body.quantity) : 1;
     const sweet = await sweetService.restockSweet(req.params.id, quantity);
     return res.status(200).json(sweet);
   } catch (err) {
